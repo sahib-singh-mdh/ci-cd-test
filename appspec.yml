@@ -1,0 +1,26 @@
+version: 0.0
+os: linux
+files:
+  - source: /
+    destination: /var/www/vhosts/cicd-test
+
+permissions:
+  - object: /var/www/vhosts/cicd-test/codedeploy/scripts
+    pattern: "*.sh"
+    mode: 755
+    type:
+      - file
+
+hooks:
+  BeforeInstall:
+    - location: codedeploy/scripts/before_install.sh
+      timeout: 400
+      runas: root
+  AfterInstall:
+    - location: codedeploy/scripts/finish_install.sh
+      timeout: 400
+      runas: root
+  ApplicationStart:
+    - location: codedeploy/scripts/bind_app.sh
+      timeout: 800
+      runas: ec2-user
